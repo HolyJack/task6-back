@@ -7,7 +7,7 @@ const io = new Server(httpServer, {
     origin: "http://localhost:5173",
   },
 });
-const PORT = 3000;
+const PORT = process.env.PORT || 80;
 
 const shapes: Record<string, any> = {};
 const users_data: Record<string, any> = {};

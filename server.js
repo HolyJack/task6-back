@@ -8,7 +8,7 @@ const io = new socket_io_1.Server(httpServer, {
         origin: "http://localhost:5173",
     },
 });
-const PORT = 3000;
+const PORT = process.env.PORT || 80;
 const shapes = {};
 const users_data = {};
 io.on("connection", (socket) => {
