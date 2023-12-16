@@ -25,7 +25,9 @@ io.on("connection", (socket) => {
         socket.emit("preview", shapes);
     });
     socket.on("disconnect", () => {
-        delete users_data[socket.id];
+        Object.keys(users_data).forEach((room) => {
+            delete users_data[room][socket.id];
+        });
     });
     socket.on("new shape", (room, shape) => {
         if (!shapes[room])

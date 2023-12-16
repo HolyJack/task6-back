@@ -10,7 +10,7 @@ const io = new Server(httpServer, {
 const PORT = process.env.PORT || 80;
 
 const shapes: Record<string, any> = {};
-const users_data: Record<string, any> = {};
+const users_data: Record<string, Record<string, any>> = {};
 
 io.on("connection", (socket) => {
   socket.join("preview");
@@ -27,7 +27,9 @@ io.on("connection", (socket) => {
   });
 
   socket.on("disconnect", () => {
-    delete users_data[socket.id];
+    Object.keys(users_data).forEach((room) => {
+      delete users_data[room][socket.id];
+    });
   });
 
   socket.on("new shape", (room, shape) => {
