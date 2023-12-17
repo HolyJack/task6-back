@@ -32,6 +32,8 @@ io.on("connection", (socket) => {
     });
   });
 
+  socket.on("leaveroom", (room) => socket.leave(room));
+
   socket.on("new shape", (room, shape) => {
     if (!shapes[room]) shapes[room] = [];
     shapes[room].push(shape);

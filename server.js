@@ -29,6 +29,7 @@ io.on("connection", (socket) => {
             delete users_data[room][socket.id];
         });
     });
+    socket.on("leaveroom", (room) => socket.leave(room));
     socket.on("new shape", (room, shape) => {
         if (!shapes[room])
             shapes[room] = [];
