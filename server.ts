@@ -1,13 +1,18 @@
 import { createServer } from "http";
 import { Server } from "socket.io";
+import { config } from "dotenv";
+
+config();
+
+const PORT = process.env.PORT || 80;
+const URL = process.env.FRONT_URL;
 
 const httpServer = createServer();
 const io = new Server(httpServer, {
   cors: {
-    origin: "https://task6-front-two.vercel.app",
+    origin: URL,
   },
 });
-const PORT = process.env.PORT || 80;
 
 const shapes: Record<string, any> = {};
 const users_data: Record<string, Record<string, any>> = {};
@@ -15,11 +20,13 @@ const users_data: Record<string, Record<string, any>> = {};
 io.on("connection", (socket) => {
   socket.join("preview");
   io.in(socket.id).emit("preview", shapes);
+
   socket.on("join room", (room: string) => {
     if (!(room in shapes)) shapes[room] = [];
     socket.leave("preview");
     socket.join(room);
-    socket.emit("joined room", room, shapes[room]);
+    socket.emit("joined room", room);
+    io.in(room).emit("update shapes");
   });
 
   socket.on("preview", () => {
@@ -34,7 +41,7 @@ io.on("connection", (socket) => {
 
   socket.on("leaveroom", (room) => socket.leave(room));
 
-  socket.on("new shape", (room, shape) => {
+  socket.on("new shape", async (room, shape) => {
     if (!shapes[room]) shapes[room] = [];
     shapes[room].push(shape);
     io.in(room).emit("update shapes", shapes[room]);
