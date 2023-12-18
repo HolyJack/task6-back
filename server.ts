@@ -43,7 +43,10 @@ io.on("connection", (socket) => {
     });
   });
 
-  socket.on("leaveroom", (room) => socket.leave(room));
+  socket.on("leaveroom", (room) => {
+    socket.leave(room);
+    socket.join("preview");
+  });
 
   socket.on("initial shapes", (room) => {
     io.in(socket.id).emit("initial shapes", shapes[room]);

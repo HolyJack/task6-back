@@ -46,7 +46,10 @@ io.on("connection", (socket) => {
             delete users_data[room][socket.id];
         });
     });
-    socket.on("leaveroom", (room) => socket.leave(room));
+    socket.on("leaveroom", (room) => {
+        socket.leave(room);
+        socket.join("preview");
+    });
     socket.on("initial shapes", (room) => {
         io.in(socket.id).emit("initial shapes", shapes[room]);
     });
