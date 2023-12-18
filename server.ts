@@ -52,7 +52,7 @@ io.on("connection", (socket) => {
   socket.on("new shape", async (room, shape) => {
     if (!shapes[room]) shapes[room] = [];
     shapes[room].push(shape);
-    io.in(room).emit("add new shape", shape);
+    socket.to(room).emit("add new shape", shape);
     io.in("preview").emit(`update preview ${room}`, shape);
   });
 

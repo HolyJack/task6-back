@@ -54,7 +54,7 @@ io.on("connection", (socket) => {
         if (!shapes[room])
             shapes[room] = [];
         shapes[room].push(shape);
-        io.in(room).emit("add new shape", shape);
+        socket.to(room).emit("add new shape", shape);
         io.in("preview").emit(`update preview ${room}`, shape);
     }));
     socket.on("broadcast user", (room, { user_id, username, pos, shape, color }) => {
