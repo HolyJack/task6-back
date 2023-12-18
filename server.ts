@@ -26,7 +26,6 @@ io.on("connection", (socket) => {
     socket.leave("preview");
     socket.join(room);
     socket.emit("joined room", room);
-    io.in(room).emit("update shapes");
   });
 
   socket.on("preview", () => {
@@ -41,10 +40,14 @@ io.on("connection", (socket) => {
 
   socket.on("leaveroom", (room) => socket.leave(room));
 
+  socket.on("inital shapes", (room) => {
+    io.in(socket.id).emit("initial shapes", shapes[room]);
+  });
+
   socket.on("new shape", async (room, shape) => {
     if (!shapes[room]) shapes[room] = [];
     shapes[room].push(shape);
-    io.in(room).emit("update shapes", shapes[room]);
+    io.in(room).emit("add new shape", shape);
     io.in("preview").emit("preview", shapes);
   });
 
