@@ -42,7 +42,7 @@ io.on("connection", (socket) => {
         });
     });
     socket.on("leaveroom", (room) => socket.leave(room));
-    socket.on("inital shapes", (room) => {
+    socket.on("initial shapes", (room) => {
         io.in(socket.id).emit("initial shapes", shapes[room]);
     });
     socket.on("new shape", (room, shape) => __awaiter(void 0, void 0, void 0, function* () {
