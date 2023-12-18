@@ -14,7 +14,12 @@ const io = new Server(httpServer, {
   },
 });
 
-const shapes: Record<string, any> = {};
+const shapes: Record<string, any> = {
+  room1: [],
+  room2: [],
+  room3: [],
+  room4: [],
+};
 const users_data: Record<string, Record<string, any>> = {};
 
 io.on("connection", (socket) => {
@@ -28,8 +33,8 @@ io.on("connection", (socket) => {
     socket.emit("joined room", room);
   });
 
-  socket.on("preview", () => {
-    socket.emit("preview", shapes);
+  socket.on("get initial preview", () => {
+    io.in(socket.id).emit("initial preview", shapes);
   });
 
   socket.on("disconnect", () => {
@@ -48,7 +53,7 @@ io.on("connection", (socket) => {
     if (!shapes[room]) shapes[room] = [];
     shapes[room].push(shape);
     io.in(room).emit("add new shape", shape);
-    io.in("preview").emit("preview", shapes);
+    io.in("preview").emit(`update preview ${room}`, shape);
   });
 
   socket.on(

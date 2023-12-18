@@ -21,7 +21,12 @@ const io = new socket_io_1.Server(httpServer, {
         origin: URL,
     },
 });
-const shapes = {};
+const shapes = {
+    room1: [],
+    room2: [],
+    room3: [],
+    room4: [],
+};
 const users_data = {};
 io.on("connection", (socket) => {
     socket.join("preview");
@@ -33,8 +38,8 @@ io.on("connection", (socket) => {
         socket.join(room);
         socket.emit("joined room", room);
     });
-    socket.on("preview", () => {
-        socket.emit("preview", shapes);
+    socket.on("get initial preview", () => {
+        io.in(socket.id).emit("initial preview", shapes);
     });
     socket.on("disconnect", () => {
         Object.keys(users_data).forEach((room) => {
@@ -50,7 +55,7 @@ io.on("connection", (socket) => {
             shapes[room] = [];
         shapes[room].push(shape);
         io.in(room).emit("add new shape", shape);
-        io.in("preview").emit("preview", shapes);
+        io.in("preview").emit(`update preview ${room}`, shape);
     }));
     socket.on("broadcast user", (room, { user_id, username, pos, shape, color }) => {
         if (!users_data[room])
