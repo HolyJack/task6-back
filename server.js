@@ -26,6 +26,10 @@ const shapes = {
     room2: [],
     room3: [],
     room4: [],
+    room5: [],
+    room6: [],
+    room7: [],
+    room8: [],
 };
 const users_data = {};
 io.on("connection", (socket) => {
@@ -33,7 +37,7 @@ io.on("connection", (socket) => {
     io.in(socket.id).emit("preview", shapes);
     socket.on("join room", (room) => {
         if (!(room in shapes))
-            shapes[room] = [];
+            return;
         socket.leave("preview");
         socket.join(room);
         socket.emit("joined room", room);
@@ -55,7 +59,7 @@ io.on("connection", (socket) => {
     });
     socket.on("new shape", (room, shape) => __awaiter(void 0, void 0, void 0, function* () {
         if (!shapes[room])
-            shapes[room] = [];
+            return;
         shapes[room].push(shape);
         socket.to(room).emit("add new shape", shape);
         io.in("preview").emit(`update preview ${room}`, shape);

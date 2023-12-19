@@ -19,6 +19,10 @@ const shapes: Record<string, any> = {
   room2: [],
   room3: [],
   room4: [],
+  room5: [],
+  room6: [],
+  room7: [],
+  room8: [],
 };
 const users_data: Record<string, Record<string, any>> = {};
 
@@ -27,7 +31,7 @@ io.on("connection", (socket) => {
   io.in(socket.id).emit("preview", shapes);
 
   socket.on("join room", (room: string) => {
-    if (!(room in shapes)) shapes[room] = [];
+    if (!(room in shapes)) return;
     socket.leave("preview");
     socket.join(room);
     socket.emit("joined room", room);
@@ -53,7 +57,7 @@ io.on("connection", (socket) => {
   });
 
   socket.on("new shape", async (room, shape) => {
-    if (!shapes[room]) shapes[room] = [];
+    if (!shapes[room]) return;
     shapes[room].push(shape);
     socket.to(room).emit("add new shape", shape);
     io.in("preview").emit(`update preview ${room}`, shape);
